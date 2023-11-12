@@ -19,7 +19,7 @@ type ValueProps = {
     },
   
     value: {
-      fontSize: 45,
+      fontSize: 20,
       color: '#AFB3BE',
       fontWeight: '500',
   }
