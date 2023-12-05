@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, SafeAreaView } from 'react-native';
 import Value from './src/components/Value';
 import RingProgress from './src/components/RingProgress';
 import { useState } from 'react';
@@ -7,8 +7,14 @@ import useHealthData from './src/hooks/useHealthData';
 import { AntDesign } from '@expo/vector-icons';
 import AppleHealthKit, { HealthInputOptions, HealthKitPermissions, HealthUnit} from 'react-native-health';
 import { LineChart } from "react-native-chart-kit";
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Exercice } from './Excercice';
+import { LoginPage } from './Login';
 
-
+const Tab = createBottomTabNavigator()
+const Practice = () => <SafeAreaView style={{flex:1}} ><Exercice/></SafeAreaView>
+const Login = () => <SafeAreaView style={{flex:1}} ><LoginPage/></SafeAreaView>
 const permissions: HealthKitPermissions = {
   permissions: {
     read: [
@@ -40,85 +46,12 @@ export default function App() {
   }
 
   return (
-    // -------------------#---------------------- RING PROPERTIES ---------------------#------------------- 
-    <View style={styles.container}>
-      <View style={styles.datePicker}>
-        <AntDesign 
-        onPress={() => changeDate ( - 1 )} 
-        name='left' 
-        size={20} 
-        color='white'/>
-
-        <Text style={styles.date}>{date.toDateString()}</Text>
-
-        <AntDesign
-        onPress={() => changeDate ( + 1 )}  
-        name='right' 
-        size={20} 
-        color='white'/>
-      </View>
-      
-      <RingProgress radius={110} strokeWidth={30} progress={steps / STEP_GOAL} />
-
-      <View style={styles.values}>
-
-        <Value label="Steps" value={steps.toString()}/>
-        <Value label="Distance" value={`${(distance / 1000).toFixed(2)} km`}/>
-        <Value label="Flights" value={flights.toString()}/>
-
-      </View>
-  
-
-    <View>   
-        <LineChart
-          data={{
-           labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-           datasets: [
-           {
-             data: [
-             2312,
-             4849,
-             5543,
-             7895,
-             4873,
-             6372,
-             9157
-            ]
-            
-            }]
-          }}
-    width={Dimensions.get("window").width} // from react-native
-    height={250}
-    //yAxisLabel=""
-    //yAxisSuffix="ft"
-    yAxisInterval={1} // optional, defaults to 1
-    chartConfig={{
-      backgroundColor: 'black',
-      backgroundGradientFrom: "#040f13",
-      backgroundGradientTo: "#000000",
-      decimalPlaces: 0, // optional, defaults to 2dp
-      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      style: {
-        borderRadius: 5
-      },
-      propsForDots: {
-        r: "4",
-        strokeWidth: "2",
-        stroke: "#15E005"
-      }
-    }}
-    bezier
-    style={{
-      borderRadius: 15,
-      marginTop: 60,
-      marginHorizontal: -12,
-    }}
-  />
-</View>
-
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+    <Tab.Navigator>
+      <Tab.Screen name='Login' component={Login} />
+      <Tab.Screen name='Step Counter' component={Practice} />
+    </Tab.Navigator>
+   </NavigationContainer>
   );
 }
 
